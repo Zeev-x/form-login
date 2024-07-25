@@ -81,14 +81,18 @@ server.get('/logout', (req, res) => {
 });
 
 // Protected route
-server.get('/', (req, res) => {
+server.use((req, res, next) => {
   if (req.isAuthenticated()) {
-    // Setel username di session
-    var usrName = req.session.username;
-    res.send(`Halo ${usrName} Selamat datang di server!`);
+    return next();
   } else {
     res.redirect('/login');
   }
+});
+
+// Main route
+server.get('/', (req, res) => {
+  var usrName = req.session.username;
+  res.send(`Halo ${usrName} Selamat datang di server!`);
 });
 
 // Error handling
